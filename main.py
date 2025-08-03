@@ -34,6 +34,7 @@ while running:
         screen.blit(bg_image, (0,0))
         my_player.draw(screen)
         my_player.move()
+        my_player.handle_animation()
 
     pygame.display.update()
     CLOCK.tick(FPS)

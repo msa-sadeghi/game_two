@@ -14,14 +14,13 @@ class Player(Sprite):
                 img = pygame.transform.scale_by(img, 0.4)
                 temp_list.append(img)
             self.all_images.append(temp_list)
-
         self.animation_index = 4
         self.frame_index = 0
         self.image = self.all_images[self.animation_index][self.frame_index]
         self.rect =  self.image.get_rect(topleft=(x,y))
+        self.last_animation_time = pygame.time.get_ticks()
     def draw(self, screen):
         screen.blit(self.image, self.rect)
-
     def move(self):
         dx = 0
         dy = 0
@@ -35,7 +34,12 @@ class Player(Sprite):
         self.rect.y += dy
 
     def handle_animation(self):
-        pass
+        self.image = self.all_images[self.animation_index][self.frame_index]
+        if pygame.time.get_ticks() - self.last_animation_time > 100:
+            self.last_animation_time = pygame.time.get_ticks()
+            self.frame_index += 1
+            if self.frame_index >= len(self.all_images[self.animation_index]):
+                self.frame_index = 0
 
 
 
