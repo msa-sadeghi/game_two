@@ -32,6 +32,10 @@ while running:
         show_menu()
     else:
         screen.blit(bg_image, (0,0))
+        if my_player.idle:
+            my_player.change_animation(4)
+        elif not my_player.idle:
+            my_player.change_animation(8)
         my_player.draw(screen)
         my_player.move()
         my_player.handle_animation()

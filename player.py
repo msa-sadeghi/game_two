@@ -19,17 +19,31 @@ class Player(Sprite):
         self.image = self.all_images[self.animation_index][self.frame_index]
         self.rect =  self.image.get_rect(topleft=(x,y))
         self.last_animation_time = pygame.time.get_ticks()
+        self.direction = 1
+        self.idle = True
+        self.yspeed = 0
     def draw(self, screen):
-        screen.blit(self.image, self.rect)
+        img = pygame.transform.flip(self.image, self.direction == -1, False)
+        screen.blit(img, self.rect)
     def move(self):
         dx = 0
         dy = 0
         keys = pygame.key.get_pressed()
         if keys[pygame.K_LEFT]:
+            self.idle = False
+            self.direction = -1
             dx -= 5
         if keys[pygame.K_RIGHT]:
+            self.idle = False
+            self.direction = 1
             dx += 5
-
+        if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+            self.idle = True
+        if keys[pygame.K_UP]:
+            self.yspeed = -15
+        
+        dy += self.yspeed
+        self.yspeed += 1
         self.rect.x += dx
         self.rect.y += dy
 
@@ -40,6 +54,13 @@ class Player(Sprite):
             self.frame_index += 1
             if self.frame_index >= len(self.all_images[self.animation_index]):
                 self.frame_index = 0
+
+    def change_animation(self, animation_index):
+        if animation_index != self.animation_index:
+            self.animation_index = animation_index
+            self.frame_index = 0
+
+
 
 
 
