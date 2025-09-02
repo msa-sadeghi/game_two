@@ -71,16 +71,13 @@ def draw_tiles():
             if world_data[i][j] != -1:
                 screen.blit(all_button[world_data[i][j]].image, (j * TILE_SIZE, i * TILE_SIZE))
 
-
-
-
 FPS = 60
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-   
+    screen.fill("black")
     draw_grid()
     pygame.draw.rect(screen, "lightgreen", (WIDTH, 0, RIGHT_MARGIN, HEIGHT + BOTTOM_MARING))
     pygame.draw.rect(screen, "lightgreen", (0, HEIGHT, WIDTH + RIGHT_MARGIN, BOTTOM_MARING))
@@ -96,6 +93,9 @@ while running:
     c = mouse_position[0] // TILE_SIZE
     if pygame.mouse.get_pressed()[0] and mouse_position[0] < WIDTH and mouse_position[1] < HEIGHT:
         world_data[r][c] =  selected_btn_index
+    if pygame.mouse.get_pressed()[2] and mouse_position[0] < WIDTH and mouse_position[1] < HEIGHT:
+        world_data[r][c] = -1
+  
     pygame.display.update()
     CLOCK.tick(FPS)
 
