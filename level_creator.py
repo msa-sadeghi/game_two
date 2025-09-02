@@ -54,7 +54,7 @@ def draw_grid():
     for i in range(ROWS + 1):
         pygame.draw.line(screen, "red", (0, i * TILE_SIZE), (WIDTH, i * TILE_SIZE))
     for i in range(COLS + 1):
-        pygame.draw.line(screen, "red", (i * TILE_SIZE , 0), (i * TILE_SIZE, HEIGHT))
+        pygame.draw.line(screen, "red", (i * TILE_SIZE -scroll , 0), (i * TILE_SIZE -scroll, HEIGHT))
 
 selected_btn_index = 0
 r = 0
@@ -69,7 +69,12 @@ def draw_tiles():
     for i in range(len(world_data)):
         for j in range(len(world_data[i])):
             if world_data[i][j] != -1:
-                screen.blit(all_button[world_data[i][j]].image, (j * TILE_SIZE, i * TILE_SIZE))
+                screen.blit(all_button[world_data[i][j]].image, (j * TILE_SIZE - scroll, i * TILE_SIZE))
+
+scroll = 0
+scroll_left = False
+scroll_right = False
+
 
 FPS = 60
 running = True
@@ -77,8 +82,24 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                scroll_left = True
+            if event.key == pygame.K_RIGHT:
+                scroll_right = True
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                scroll_left = False
+            if event.key == pygame.K_RIGHT:
+                scroll_right = False
+                
+    if scroll_left and scroll > 0:
+        scroll -= 5
+    if scroll_right:
+        scroll += 5    
     screen.fill("black")
     draw_grid()
+    draw_tiles()
     pygame.draw.rect(screen, "lightgreen", (WIDTH, 0, RIGHT_MARGIN, HEIGHT + BOTTOM_MARING))
     pygame.draw.rect(screen, "lightgreen", (0, HEIGHT, WIDTH + RIGHT_MARGIN, BOTTOM_MARING))
     for i,btn in enumerate(all_button):
@@ -87,10 +108,10 @@ while running:
             selected_btn_index = i
 
     pygame.draw.rect(screen,"red", all_button[selected_btn_index].rect, 3)
-    draw_tiles()
+    
     mouse_position = pygame.mouse.get_pos()
     r = mouse_position[1] // TILE_SIZE
-    c = mouse_position[0] // TILE_SIZE
+    c = (mouse_position[0] + scroll) // TILE_SIZE
     if pygame.mouse.get_pressed()[0] and mouse_position[0] < WIDTH and mouse_position[1] < HEIGHT:
         world_data[r][c] =  selected_btn_index
     if pygame.mouse.get_pressed()[2] and mouse_position[0] < WIDTH and mouse_position[1] < HEIGHT:
