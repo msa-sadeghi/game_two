@@ -1,5 +1,6 @@
 import pygame
 pygame.init()
+import pickle
 import os
 from button import Button
 
@@ -80,6 +81,38 @@ font = pygame.font.SysFont("arial", 22)
 
 current_level_text = font.render(f"level:{current_level}",  True, "red")
 
+up_arrow_image = pygame.image.load("./buttons_images/arrow.png")
+up_arrow_image = pygame.transform.scale(up_arrow_image, (50,50))
+down_arrow_image = pygame.image.load("./buttons_images/down_arrow.png")
+down_arrow_image = pygame.transform.scale(down_arrow_image, (50,50))
+load_image = pygame.image.load("./buttons_images/load.png")
+load_image = pygame.transform.scale(load_image, (50,50))
+save_image = pygame.image.load("./buttons_images/save.png")
+save_image = pygame.transform.scale(save_image, (50,50))
+
+
+up_arrow_button = Button(up_arrow_image, 100, HEIGHT + 40)
+down_arrow_button = Button(down_arrow_image, 150, HEIGHT + 40)
+
+load_button = Button(load_image, 200, HEIGHT + 40)
+save_button = Button(save_image, 250, HEIGHT + 40)
+
+
+world_data =  []
+for i in range(ROWS):
+    r = [-1] * COLS
+    world_data.append(r)
+
+def save_level(current_level):
+    with open(f"level{current_level}", "wb") as f:
+        pickle.dump(world_data, f)
+
+def load_level(current_level):
+    global world_data
+    with open(f"level{current_level}", "rb") as f:
+        world_data = pickle.load(f)
+
+
 FPS = 60
 running = True
 while running:
@@ -124,6 +157,21 @@ while running:
 
     screen.blit(current_level_text, (10, HEIGHT + 20))
 
+    up_arrow_button.draw(screen)
+    down_arrow_button.draw(screen)
+
+    if up_arrow_button.handle_click():
+        if current_level < 10:
+            current_level += 1
+    if down_arrow_button.handle_click():
+        if current_level > 1:
+            current_level -= 1
+
+    save_button.draw(screen)
+    load_button.draw(screen)
+
+
+    current_level_text = font.render(f"level:{current_level}",  True, "red")
     pygame.display.update()
     CLOCK.tick(FPS)
 
