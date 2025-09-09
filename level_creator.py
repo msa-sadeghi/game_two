@@ -74,7 +74,11 @@ def draw_tiles():
 scroll = 0
 scroll_left = False
 scroll_right = False
+current_level = 1
 
+font = pygame.font.SysFont("arial", 22)
+
+current_level_text = font.render(f"level:{current_level}",  True, "red")
 
 FPS = 60
 running = True
@@ -116,7 +120,10 @@ while running:
         world_data[r][c] =  selected_btn_index
     if pygame.mouse.get_pressed()[2] and mouse_position[0] < WIDTH and mouse_position[1] < HEIGHT:
         world_data[r][c] = -1
-  
+    
+
+    screen.blit(current_level_text, (10, HEIGHT + 20))
+
     pygame.display.update()
     CLOCK.tick(FPS)
 
