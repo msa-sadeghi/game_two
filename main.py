@@ -1,6 +1,9 @@
 import pygame
 from button import Button
 from player import Player
+import pickle
+from world import World
+
 pygame.init()
 my_player = Player(100, 380)
 WIDTH = 1000
@@ -23,6 +26,20 @@ def show_menu():
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 CLOCK = pygame.time.Clock()
 FPS = 60
+
+world_data = []
+
+current_level = 1
+
+def load_level(current_level):
+    global world_data
+    with open(f"level{current_level}", "rb") as f:
+        world_data = pickle.load(f)
+
+load_level(current_level)
+bomb_group = pygame.sprite.Group()
+game_world = World(world_data, bomb_group)
+
 running = True
 while running:
     for event in pygame.event.get():
@@ -39,7 +56,9 @@ while running:
         my_player.draw(screen)
         my_player.move()
         my_player.handle_animation()
-
+        
+        bomb_group.draw(screen)
+        bomb_group.update()
     pygame.display.update()
     CLOCK.tick(FPS)
 

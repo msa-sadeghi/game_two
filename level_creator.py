@@ -169,7 +169,10 @@ while running:
 
     save_button.draw(screen)
     load_button.draw(screen)
-
+    if save_button.handle_click():
+        save_level(current_level)
+    if load_button.handle_click():
+        load_level(current_level)
 
     current_level_text = font.render(f"level:{current_level}",  True, "red")
     pygame.display.update()
