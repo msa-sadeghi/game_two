@@ -39,7 +39,9 @@ def load_level(current_level):
 load_level(current_level)
 bomb_group = pygame.sprite.Group()
 box_group = pygame.sprite.Group()
-game_world = World(world_data, bomb_group, box_group)
+energy_group = pygame.sprite.Group()
+obstacle_group = pygame.sprite.Group()
+game_world = World(world_data, bomb_group, box_group, energy_group, obstacle_group)
 
 running = True
 while running:
@@ -62,6 +64,10 @@ while running:
         bomb_group.update()
         box_group.draw(screen)
         box_group.update()
+        energy_group.draw(screen)
+        energy_group.update()
+        obstacle_group.draw(screen)
+        obstacle_group.update()
     pygame.display.update()
     CLOCK.tick(FPS)
 
