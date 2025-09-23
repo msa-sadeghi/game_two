@@ -25,7 +25,7 @@ class Player(Sprite):
     def draw(self, screen):
         img = pygame.transform.flip(self.image, self.direction == -1, False)
         screen.blit(img, self.rect)
-    def move(self):
+    def move(self, box_group):
         dx = 0
         dy = 0
         keys = pygame.key.get_pressed()
@@ -42,9 +42,28 @@ class Player(Sprite):
         if keys[pygame.K_UP]:
             self.yspeed = -15
         
+
+        for box in box_group:
+            if box.rect.colliderect(self.rect.x + dx, self.rect.y, self.rect.size[0], self.rect.size[1]):
+                dx = 0
+        self.rect.x += dx
         dy += self.yspeed
         self.yspeed += 1
-        self.rect.x += dx
+
+        for box in box_group:
+            if box.rect.colliderect(self.rect.x , self.rect.y + dy, self.rect.size[0], self.rect.size[1]):
+                if self.yspeed > 0:
+                    dy = box.rect.top - self.rect.bottom
+                else:
+                    dy = box.rect.bottom - self.rect.top
+                    self.yspeed = 0
+
+
+
+
+
+
+        
         self.rect.y += dy
 
     def handle_animation(self):

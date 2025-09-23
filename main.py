@@ -5,7 +5,7 @@ import pickle
 from world import World
 
 pygame.init()
-my_player = Player(100, 380)
+my_player = Player(100, 180)
 WIDTH = 1000
 HEIGHT = 600
 bg_image = pygame.image.load("./freegui/png/BG.png")
@@ -38,7 +38,8 @@ def load_level(current_level):
 
 load_level(current_level)
 bomb_group = pygame.sprite.Group()
-game_world = World(world_data, bomb_group)
+box_group = pygame.sprite.Group()
+game_world = World(world_data, bomb_group, box_group)
 
 running = True
 while running:
@@ -54,11 +55,13 @@ while running:
         elif not my_player.idle:
             my_player.change_animation(8)
         my_player.draw(screen)
-        my_player.move()
+        my_player.move(box_group)
         my_player.handle_animation()
         
         bomb_group.draw(screen)
         bomb_group.update()
+        box_group.draw(screen)
+        box_group.update()
     pygame.display.update()
     CLOCK.tick(FPS)
 
